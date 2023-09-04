@@ -1,0 +1,4 @@
+/home/dangel/Desktop/projects/DCSL/build/CMakeFiles/../bin/server.dir
+/home/dangel/Desktop/projects/DCSL/build/CMakeFiles/../bin/client.dir
+/home/dangel/Desktop/projects/DCSL/build/CMakeFiles/edit_cache.dir
+/home/dangel/Desktop/projects/DCSL/build/CMakeFiles/rebuild_cache.dir

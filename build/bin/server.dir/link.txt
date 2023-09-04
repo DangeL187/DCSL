@@ -1,0 +1,1 @@
+/usr/bin/c++ -fpermissive -rdynamic CMakeFiles/../bin/server.dir/src/Server/Server.cpp.o -o ../bin/server 
