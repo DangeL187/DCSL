@@ -1,1 +1,0 @@
-/usr/bin/c++ -fpermissive -rdynamic CMakeFiles/../bin/client.dir/src/Client/Client.cpp.o -o ../bin/client 
