@@ -30,7 +30,7 @@ public:
                 throw std::runtime_error("Error converting address");
             }
             if (connect(sock, (sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
-                throw std::runtime_error("Error connecting to server");
+                throw std::runtime_error("Error connecting to the server");
             }
 
             sendMessage(user_name, -1);
@@ -46,29 +46,7 @@ public:
         bool stop = false;
         while (true) {
             try {
-                uint32_t size;
-                if (recv(socket, &size, sizeof(size), 0) == -1) {
-                  throw std::runtime_error("Error receiving size");
-                }
-                size = ntohl(size);
-
-                std::vector<std::string> vec(size);
-                for (int i = 0; i < size; i++) {
-                  size_t value_len;
-                  auto recv_len = recv(socket, &value_len, sizeof(value_len), 0);
-                  if (recv_len == -1 || recv_len == 0) {
-                      std::cout << "Error Connecting to the Server\n";
-                      stop = true;
-                      break;
-                  }
-                  char value[value_len];
-                  if (recv(socket, value, value_len, 0) == -1) {
-                    throw std::runtime_error("Error receiving value");
-                  }
-                  vec[i] = value;
-                }
-
-                if (recieveMessage(vec) == -1) {
+                if (recieveMessage(socket) == -1) {
                     stop = true;
                 }
             } catch (std::exception& e) {
@@ -78,10 +56,38 @@ public:
         }
     }
 
-    int recieveMessage(std::vector<std::string> vec) {
-        std::cout << vec[2] << ": " << vec[1] << "\n";
-        if (vec[0] == "-2") { return -1; }
-        return 0;
+    int recieveMessage(int socket) {
+        uint32_t size;
+        if (recv(socket, &size, sizeof(size), 0) == -1) {
+            throw std::runtime_error("Error receiving size");
+        }
+        size = ntohl(size);
+
+        std::vector<std::string> vec(size);
+        for (int i = 0; i < size; i++) {
+            size_t value_len;
+            auto recv_len = recv(socket, &value_len, sizeof(value_len), 0);
+            if (recv_len == -1 || recv_len == 0) {
+                std::cout << "Error Connecting to the Server\n";
+                break;
+                return -1;
+            }
+            char value[value_len];
+            if (recv(socket, value, value_len, 0) == -1) {
+                throw std::runtime_error("Error receiving value");
+            }
+            vec[i] = value;
+        }
+
+        output.command = std::stoi(vec[0]);
+        output.msg = vec[1];
+        output.sender = vec[2];
+        
+        if (vec[0] == "-2") {
+            return -1;
+        } else {
+            return 0;
+        }
     }
     void sendMessage(std::string input, int command = 0) {
         std::vector<std::string> vec(3);
@@ -108,5 +114,8 @@ public:
                 throw std::runtime_error("Error sending value");
             }
         }
+    }
+    Message getOutput() {
+        return output;
     }
 };
