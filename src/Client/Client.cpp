@@ -35,7 +35,7 @@ public:
     void getMessage() {
         while (true) {
             Message output = client->getOutput();
-            if (!(output == old_output)) {
+            if (!(output == old_output) && output.msg != "") {
                 cout << output.sender << ": " << output.msg << endl;
             }
             old_output = output;
@@ -46,7 +46,7 @@ public:
 int main() {
     string input;
 
-    cout << "Logi2n: ";
+    cout << "Login: ";
     cin >> input;
 
     ClientWrapper client_wrapper(input, "127.0.0.1", 1234);

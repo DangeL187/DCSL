@@ -2,30 +2,7 @@ class Room {
 private:
     std::string room_name;
     std::vector<User> users_list;
-public:
-    Room(std::string room_name_ = "") {
-        room_name = room_name_;
-    }
 
-    void addUser(User user) {
-        users_list.push_back(user);
-    }
-    void removeUser(std::string user_name) {
-        for (int i = 0; i < users_list.size(); i++) {
-            if (users_list[i].getName() == user_name) {
-                users_list.erase(users_list.begin() + i);
-                break;
-            }
-        }
-    }
-
-    void broadcast(Message message) {
-        for (auto& user: users_list) {
-            if (user.getName() != message.sender) {
-                sendMessage(message, user.getSocket());
-            }
-        }
-    }
     void sendMessage(Message message, int client_socket) {
         std::vector<std::string> vec(3);
         vec[0] = std::to_string(message.command);
@@ -50,9 +27,29 @@ public:
             }
         }
     }
+public:
+    Room(std::string room_name_ = "") {
+        room_name = room_name_;
+    }
 
-    std::string getName() {
-        return room_name;
+    void broadcast(Message message) {
+        for (auto& user: users_list) {
+            if (user.getName() != message.sender) {
+                sendMessage(message, user.getSocket());
+            }
+        }
+    }
+
+    void addUser(User user) {
+        users_list.push_back(user);
+    }
+    void removeUser(std::string user_name) {
+        for (int i = 0; i < users_list.size(); i++) {
+            if (users_list[i].getName() == user_name) {
+                users_list.erase(users_list.begin() + i);
+                break;
+            }
+        }
     }
     bool isUser(std::string user_name) {
         for (auto& user: users_list) {
@@ -64,5 +61,9 @@ public:
     }
     std::vector<User> getUsersList() {
         return users_list;
+    }
+
+    std::string getName() {
+        return room_name;
     }
 };

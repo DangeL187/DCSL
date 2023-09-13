@@ -11,21 +11,18 @@ class Client {
 private:
     std::string user_name;
     int sock;
-    bool full_stop = false;
     sockaddr_in server_addr;
     Message output;
 
     void clientHandler(int socket) {
-        bool stop = false;
         while (true) {
             try {
                 if (recieveMessage(socket) == -1) {
-                    stop = true;
+                    break;
                 }
             } catch (std::exception& e) {
                 std::cerr << e.what() << std::endl;
             }
-            if (stop) { break; }
         }
     }
 
@@ -42,7 +39,6 @@ private:
             auto recv_len = recv(socket, &value_len, sizeof(value_len), 0);
             if (recv_len == -1 || recv_len == 0) {
                 std::cout << "Error Connecting to the Server\n";
-                break;
                 return -1;
             }
             char value[value_len];
@@ -52,9 +48,11 @@ private:
             vec[i] = value;
         }
 
-        output.command = std::stoi(vec[0]);
-        output.msg = vec[1];
-        output.sender = vec[2];
+        if (vec[1] != "" && vec[2] != "") {
+            output.command = std::stoi(vec[0]);
+            output.msg = vec[1];
+            output.sender = vec[2];
+        }
 
         if (vec[0] == "-2") {
             return -1;
