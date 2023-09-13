@@ -8,8 +8,8 @@ private:
     shared_ptr<Client> client;
     Message old_output;
 public:
-    ClientWrapper(std::string login) {
-        client = make_shared<Client>(login);
+    ClientWrapper(std::string login, std::string ip, int port) {
+        client = make_shared<Client>(login, ip, port);
         thread thread(&getMessage, this);
         thread.detach();
 
@@ -46,10 +46,10 @@ public:
 int main() {
     string input;
 
-    cout << "Login: ";
+    cout << "Logi2n: ";
     cin >> input;
 
-    ClientWrapper client_wrapper(input);
+    ClientWrapper client_wrapper(input, "127.0.0.1", 1234);
 
     return 0;
 }
