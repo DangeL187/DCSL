@@ -1,0 +1,103 @@
+-----------------------------------------------------------------------------------
+DangeL's Client-Server Lib (DCSL)
+-----------------------------------------------------------------------------------
+Server.h
+-----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+Public Member Functions:
+-----------------------------------------------------------------------------------
+Server(std::string ip, int port)
+
+Creates server socket;
+Sets server's IP and PORT.
+
+Parameters:
+	ip: server's ip
+	port: server's port
+-----------------------------------------------------------------------------------
+void waitForClient()
+
+Waits for the client to connect;
+Creates a new thread for "clientHandler", passing the new client's socket as an argument.
+-----------------------------------------------------------------------------------
+void createRoom(std::string room_name)
+
+Calls room_manager's member function "createRoom" passing room's name as an argument.
+
+Parameters:
+	room_name: new room's name
+-----------------------------------------------------------------------------------
+bool isUser(std::string name)
+
+Returns true if the user is in the server's list of users, otherwise returns false.
+
+Parameters:
+	name: user's name to check if it is in the server's list of users
+-----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+Private Member Functions:
+-----------------------------------------------------------------------------------
+void clientHandler(int client_sock)
+
+Continuously calls "recieveMessage" until it returns -1;
+Defines the command of the recieved message by calling "defineCommand".
+
+Parameters:
+	client_sock: client's socket
+-----------------------------------------------------------------------------------
+int recieveMessage(int& client_sock, int& user_index, std::string& user_room)
+
+Receives a message from the client specified by its socket;
+Received message is stored in the "output" variable;
+Returns -1 if the client was disconnected.
+
+Parameters:
+	client_sock: reference to the client's socket
+	user_index: reference to the user's index
+	user_room: reference to the user's room
+-----------------------------------------------------------------------------------
+int defineCommand(Message message, int& client_sock, std::string& user_room)
+
+Defines command of the recieved message.
+
+Parameters:
+	message: recieved message
+	client_sock: reference to the client's socket
+	user_room: reference to the user's room
+-----------------------------------------------------------------------------------
+int joinRoom(Message message, std::string& user_room)
+
+Places the sender of the message in the specified room;
+Returns -1 if room does not exist;
+Returns -2 if user is already in some room.
+
+Parameters:
+	message: recieved message
+	user_room: reference to the user's room
+-----------------------------------------------------------------------------------
+void broadcast(Message message)
+
+Sends message to everyone in the sender's room except the sender.
+
+Parameters:
+	message: message to send
+-----------------------------------------------------------------------------------
+void sendMessage(std::string msg, int& client_socket, bool force_exit = false)
+
+Sends a message from the server to the client specified by its socket;
+
+Parameters:
+	msg: message to send
+	client_socket: reference to the client's socket
+	force_exit: force the client to disconnect or not
+-----------------------------------------------------------------------------------
+void connect(std::string name, int socket)
+
+Adds new user in the server's list of users.
+
+Parameters:
+	name: user's name
+	socket: client's socket
+-----------------------------------------------------------------------------------
