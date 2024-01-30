@@ -1,17 +1,42 @@
+cmake_minimum_required(VERSION 3.26)
+project(DCSL)
 
-project(dangel_client_server_lib)
+# windows - CMakeLists is for mingw13 and Boost 1.84.0 only
+# linux - sudo apt install libboost-all-dev
 
-set(SOURCES_SERVER src/Server/Server.cpp src/Server/User.h src/Server/Room.h src/Server/RoomManager.h src/Server/Server.h)
-set(SOURCES_CLIENT src/Client/Client.cpp src/Client/Client.h)
+# "boost" folder must be in your project folder
+# if you don't want it, please change paths in cmake file
+# pay attention: if you use Windows names in BOOST_LIBRARIES are unique for each version of your boost library
 
-set(EXE_SERVER ../bin/server)
-set(EXE_CLIENT ../bin/client)
-set(SRC_PATH ../src)
-set(CMAKE_CXX_COMPILER_ID g++)
-set(CMAKE_CXX_FLAGS "-fpermissive")
+set(CMAKE_CXX_STANDARD 20)
 
-add_executable(${EXE_SERVER} ${SOURCES_SERVER})
-target_include_directories(${EXE_SERVER} PRIVATE ${SRC_PATH})
+if (WIN32)
+    set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/boost)
+    include_directories(${BOOST_ROOT})
+    set(BOOST_LIBRARIES boost_system-mgw13-mt-d-x64-1_84 boost_serialization-mgw13-mt-d-x64-1_84)
+    set(CMAKE_CXX_FLAGS "-L C:/Users/danii/CLionProjects/DChat/boost/stage/lib/ -std=c++20 -static-libstdc++ -static-libgcc -lboost_system-mgw13-mt-d-x64-1_84 -lboost_serialization-mgw13-mt-d-x64-1_84 -lws2_32 -fpermissive")
+endif()
+if (UNIX)
+    set(BOOST_LIBRARIES boost_system boost_serialization)
+    set(CMAKE_CXX_FLAGS "-std=c++20 -static-libstdc++ -static-libgcc -lboost_system -lboost_serialization -fpermissive")
+endif()
 
-add_executable(${EXE_CLIENT} ${SOURCES_CLIENT})
-target_include_directories(${EXE_CLIENT} PRIVATE ${SRC_PATH})
+file(GLOB HEADER_FILES "src/*.h src/**/*.h" "boost/**/*.h")
+
+set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+
+add_executable(server ${SOURCE_DIR}/Server/Server.cpp ${HEADER_FILES})
+add_executable(client ${SOURCE_DIR}/Client/Client.cpp ${HEADER_FILES})
+
+if (WIN32)
+    target_link_libraries(server ${BOOST_LIBRARIES} wsock32 ws2_32)
+    target_link_libraries(client ${BOOST_LIBRARIES} wsock32 ws2_32)
+endif()
+if (UNIX)
+    target_link_libraries(server ${BOOST_LIBRARIES})
+    target_link_libraries(client ${BOOST_LIBRARIES})
+endif()
+
+set_target_properties(server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+set_target_properties(client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
