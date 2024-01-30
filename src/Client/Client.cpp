@@ -1,5 +1,5 @@
-#include "Client.h"
 #include <memory>
+#include "Client.h"
 
 using namespace std;
 
@@ -10,7 +10,7 @@ private:
 public:
     ClientWrapper(std::string login, std::string ip, int port) {
         client = make_shared<Client>(login, ip, port);
-        thread thread(&getMessage, this);
+        thread thread(&ClientWrapper::getMessage, this);
         thread.detach();
 
         sendMessage();
