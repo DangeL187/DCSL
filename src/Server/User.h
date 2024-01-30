@@ -1,10 +1,10 @@
 class User {
 private:
-    std::string name;
-    std::string room_name;
-    int socket;
+    tcp_connection::pointer socket;
+    std::string             name;
+    std::string             room_name;
 public:
-    User(std::string name_, int socket_) {
+    User(std::string name_, tcp_connection::pointer socket_) {
         name = name_;
         socket = socket_;
     }
@@ -17,7 +17,7 @@ public:
     std::string getRoom() {
         return room_name;
     }
-    int getSocket() {
+    tcp_connection::pointer& getSocket() {
         return socket;
     }
 };
