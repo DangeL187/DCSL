@@ -1,5 +1,5 @@
-# [Client.h](https://github.com/DangeL187/DCSL/blob/main/include/Client/Client.h)
-## Main client header
+# [Client](https://github.com/DangeL187/DCSL/blob/main/include/Client/Client.h)
+## Main client class
 
 ### Public Member Functions
 | Return type | Function name | Description |
