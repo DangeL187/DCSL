@@ -1,5 +1,5 @@
 # DangeL's Client-Server Lib (DCSL)
-DCSL is a handy library for Linux that will help you setting up server and client applications way faster than before.
+DCSL is a handy cross-platform library that will help you setting up server and client applications way faster than before.
 
 All the basic functionality is already included in this library.
 
