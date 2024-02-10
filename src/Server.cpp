@@ -1,4 +1,4 @@
-#include "Server.h"
+#include "Server/Server.h"
 #include <iostream>
 
 int main() {
@@ -10,5 +10,6 @@ int main() {
     server.createRoom("Room2");
     server.createRoom("Room3");
 
-    std::cout << "let's go!\n"; while (true) {}
+    std::cout << "let's go!\n";
+    while (true) {}
 }

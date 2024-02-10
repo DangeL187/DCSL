@@ -1,5 +1,5 @@
+#include "Client/Client.h"
 #include <memory>
-#include "Client.h"
 
 using namespace std;
 
@@ -8,7 +8,7 @@ private:
     shared_ptr<Client> client;
     Message old_output;
 public:
-    ClientWrapper(std::string login, std::string ip, int port) {
+    ClientWrapper(const std::string& login, const std::string& ip, int port) {
         client = make_shared<Client>(login, ip, port);
         thread thread(&ClientWrapper::getMessage, this);
         thread.detach();
@@ -27,15 +27,16 @@ public:
                 cin >> input;
                 client->sendMessage(input, 1);
             }
-            else if (input != "" && input != "\n") {
+            else if (!input.empty() && input != "\n") {
                 client->sendMessage(input);
             }
         }
     }
-    void getMessage() {
+
+    [[noreturn]] void getMessage() {
         while (true) {
             Message output = client->getOutput();
-            if (!(output == old_output) && output.msg != "") {
+            if (!(output == old_output) && !output.msg.empty()) {
                 cout << output.sender << ": " << output.msg << endl;
             }
             old_output = output;

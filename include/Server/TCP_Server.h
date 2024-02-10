@@ -62,7 +62,7 @@ public:
     std::map<unsigned int, tcp_connection::pointer> sockets;
     unsigned int counter = 0;
 
-    explicit TCP_Server(std::string address, unsigned short port):
+    explicit TCP_Server(const std::string& address, unsigned short port):
         acceptor(io_context, tcp::endpoint(boost::asio::ip::address::from_string(address), port))
     {
         std::thread thread(&TCP_Server::acceptHandler, this);
@@ -73,7 +73,7 @@ private:
     tcp::acceptor acceptor;
     bool next = true;
 
-    void acceptHandler() {
+    [[noreturn]] void acceptHandler() {
         while (true) {
             if (next) {
                 next = false;

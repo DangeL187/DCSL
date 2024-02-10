@@ -3,7 +3,7 @@ struct Message {
     std::string msg;
     std::string sender;
 
-    bool operator==(const Message& other) {
+    bool operator==(const Message& other) const {
         return (this->command == other.command && this->msg == other.msg && this->sender == other.sender);
     }
 };

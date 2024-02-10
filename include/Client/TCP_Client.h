@@ -13,10 +13,7 @@ using boost::asio::ip::tcp;
 
 class TCP_Client {
 public:
-    TCP_Client(std::string address, unsigned short port):
-        resolver(io_context),
-        socket(io_context)
-    {
+    TCP_Client(const std::string& address, unsigned short port): resolver(io_context), socket(io_context) {
         socket.connect(tcp::endpoint(boost::asio::ip::address::from_string(address), port));
     }
 
@@ -35,7 +32,7 @@ public:
         return lines;
     }
 
-    void send(const std::vector<std::string> message) {
+    void send(const std::vector<std::string>& message) {
         std::ostringstream oss;
         boost::archive::text_oarchive archive(oss);
         archive << message;
@@ -48,6 +45,6 @@ public:
     }
 private:
     boost::asio::io_context io_context;
-    tcp::resolver resolver;
-    tcp::socket socket;
+    tcp::resolver           resolver;
+    tcp::socket             socket;
 };

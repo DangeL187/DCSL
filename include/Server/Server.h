@@ -10,7 +10,6 @@
 #include <vector>
 #include "../ErrorHandler.h"
 #include "../Message.h"
-#include "../crossplatform.h"
 #include "TCP_Server.h"
 #include "User.h"
 #include "Room.h"
@@ -25,9 +24,9 @@ private:
     std::map<unsigned int, User>         users_list;
     int                                  sockets_size = 0;
 
-    void acceptConnections() {
+    [[noreturn]] void acceptConnections() {
         while (true) {
-            if (tcp_server->sockets.size() > sockets_size && tcp_server->sockets.size() > 0) {
+            if (tcp_server->sockets.size() > sockets_size && !tcp_server->sockets.empty()) {
                 std::thread thread(&Server::clientHandler, this, tcp_server->counter);
                 thread.detach();
                 sockets_size++;
@@ -36,13 +35,14 @@ private:
     }
 
     void clientHandler(unsigned int const_index) {
-        std::cout << "New Thread #" << const_index << "\n";
+        error_handler.log("New Thread #" + std::to_string(const_index));
         while (true) {
             try {
                 if (receiveMessage(const_index) == -1) break;
                 else if (defineCommand(output, tcp_server->sockets[const_index]) == -1) break;
             } catch (std::exception& e) {
                 std::cerr << e.what() << std::endl;
+                break;
             }
         }
     }
@@ -59,10 +59,9 @@ private:
         } catch (std::exception& e) {
             User& user = users_list.find(index)->second;
             error_handler.log(user.getName() + " disconnected!");
-            if (user.getRoom() != "") {
+            if (!user.getRoom().empty()) {
                 room_manager.getRoom(user.getRoom()).removeUsername(user.getName());
             }
-
             users_list.erase(index);
             tcp_server->sockets.erase(index);
             sockets_size--;
@@ -72,7 +71,7 @@ private:
         return 0;
     }
 
-    int defineCommand(Message message, tcp_connection::pointer& connection) {
+    int defineCommand(const Message& message, tcp_connection::pointer& connection) {
         if (message.command == -1) {
             if (!isUser(message.sender)) {
                 connect(message.sender, connection);
@@ -95,7 +94,7 @@ private:
         return 0;
     }
 
-    int joinRoom(Message message) {
+    int joinRoom(const Message& message) {
         bool is_user = false;
         for (Room& room: room_manager.getRooms()) {
             if (room.isUser(message.sender)) {
@@ -109,7 +108,7 @@ private:
                 if (user.getName() == message.sender) {
                     Room& get_room = room_manager.getRoom(message.msg);
                     std::string get_room_name = get_room.getName();
-                    if (get_room_name != "") {
+                    if (!get_room_name.empty()) {
                         user.setRoom(get_room_name);
                         get_room.addUsername(user.getName());
                         user.setRoom(get_room_name);
@@ -124,7 +123,7 @@ private:
         return 0;
     }
 
-    void broadcast(Message message) {
+    void broadcast(const Message& message) {
         for (Room& room: room_manager.getRooms()) {
             if (room.isUser(message.sender)) {
                 room.broadcast(message, users_list);
@@ -133,7 +132,7 @@ private:
         }
     }
 
-    void sendMessage(std::string msg, tcp_connection::pointer& connection, bool force_exit = false) {
+    static void sendMessage(const std::string& msg, tcp_connection::pointer& connection, bool force_exit = false) {
         std::vector<std::string> vec(3);
         if (force_exit) {
             vec[0] = "-2";
@@ -146,14 +145,14 @@ private:
         connection->send(vec);
     }
 
-    void connect(std::string name, tcp_connection::pointer socket) {
+    void connect(const std::string& name, tcp_connection::pointer socket) {
         User user(name, socket);
         users_list.insert({tcp_server->counter, user});
         error_handler.log(name + " connected");
         tcp_server->counter++;
     }
 public:
-    Server(std::string ip, unsigned short port, unsigned int error_handler_mode = 0) {
+    Server(const std::string& ip, unsigned short port, unsigned int error_handler_mode = 0) {
         error_handler.setMode(error_handler_mode);
         try {
             tcp_server = std::make_shared<TCP_Server>(ip, port);
@@ -166,11 +165,11 @@ public:
         }
     }
 
-    void createRoom(std::string room_name) {
+    void createRoom(const std::string& room_name) {
         room_manager.createRoom(room_name);
     }
 
-    bool isUser(std::string name) {
+    bool isUser(const std::string& name) {
         for (std::pair<const unsigned int, User>& value: users_list) {
             if (value.second.getName() == name) {
                 return true;
@@ -179,7 +178,7 @@ public:
         return false;
     }
 
-    User& getUser(std::string name) {
+    User& getUser(const std::string& name) {
         for (std::pair<const unsigned int, User>& value: users_list) {
             if (value.second.getName() == name) {
                 return value.second;

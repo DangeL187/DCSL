@@ -8,9 +8,9 @@
 
 class Client {
 private:
-    std::shared_ptr<TCP_Client> tcp_client;
     ErrorHandler                error_handler;
     Message                     output;
+    std::shared_ptr<TCP_Client> tcp_client;
     std::string                 user_name;
 
     int clientHandler() {
@@ -25,7 +25,7 @@ private:
         try {
             std::vector<std::string> vec = tcp_client->recv();
 
-            if (vec[1] != "" && vec[2] != "") {
+            if (!vec[1].empty() && !vec[2].empty()) {
                 output.command = std::stoi(vec[0]);
                 output.msg = vec[1];
                 output.sender = vec[2];
@@ -36,12 +36,12 @@ private:
                 return 0;
             }
         } catch (std::exception& e) {
-            std::cout << "The server has been shut down" << std::endl;
+            error_handler.log("The server has been shut down");
             return -1;
         }
     }
 public:
-    Client(std::string user_name_, std::string ip, unsigned short port, unsigned int error_handler_mode = 0) {
+    Client(const std::string& user_name_, const std::string& ip, unsigned short port, short error_handler_mode = 0) {
         user_name = user_name_;
         error_handler.setMode(error_handler_mode);
         try {
@@ -51,11 +51,11 @@ public:
             thread.detach();
         }
         catch (std::exception& e) {
-            std::cout << "Couldn't connect to the server\n";
+            error_handler.log("Couldn't connect to the server");
         }
     }
 
-    void sendMessage(std::string input, int command = 0) {
+    void sendMessage(const std::string& input, int command = 0) {
         try {
             std::vector<std::string> vec(3);
             vec[0] = std::to_string(command);
@@ -64,7 +64,7 @@ public:
             tcp_client->send(vec);
         }
         catch (std::exception& e) {
-            std::cout << "Couldn't connect to the server\n";
+            error_handler.log("Couldn't connect to the server");
         }
     }
     Message getOutput() {
