@@ -13,10 +13,10 @@
 | Return type | Function name | Description |
 | ----------- | ------------- | ----------- |
 | void | `acceptConnections()` | Continuously checks if a new user is connected and, if so, creates a new thread for "clientHandler". |
+| void | `broadcast(const Message& message)` | Сall the "broadcast" method on the object of the room in which the sender is placed. |
 | void | `clientHandler(unsigned int const_index)` | <p>Continuously calls "recieveMessage" until it returns -1.</p> <p>Also continuously calls "defineCommand" until it returns -1.</p> |
-| int | `receiveMessage(unsigned int index)` | <p>Recieve a message from the client using TCP_Server object.</p> <p>Received message is stored in the "output" variable.</p> <p>Handles an event when the client is disconnected.</p> |
+| void | `connect(const std::string& name, tcp_connection::pointer socket` | Add a user in the server's users list. |
 | int | `defineCommand(const Message& message, tcp_connection::pointer& connection)` | Define the command received from the client and call the appropriate method. |
 | int | `joinRoom(const Message& message)` | <p>Place the sender of the message in the room specified in the message.</p> <p>Returns -1 if the room does not exist.</p> <p>Returns -2 if the user is already in a room.</p> |
-| void | `broadcast(const Message& message)` | Сall the "broadcast" method on the object of the room in which the sender is placed. |
+| int | `receiveMessage(unsigned int index)` | <p>Recieve a message from the client using TCP_Server object.</p> <p>Received message is stored in the "output" variable.</p> <p>Handles an event when the client is disconnected.</p> |
 | static void| `sendMessage(const std::string& msg, tcp_connection::pointer& connection, bool force_exit = false)` | Send a message from the server to the client. |
-| void | `connect(const std::string& name, tcp_connection::pointer socket` | Add a user in the server's users list. |
