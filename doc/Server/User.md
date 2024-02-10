@@ -1,5 +1,5 @@
 # [User](https://github.com/DangeL187/DCSL/blob/main/include/Server/User.h)
-## User class describing user's name, socket and room
+## A user class that describes user's name, socket and room
 
 ### Public Member Functions
 | Return type | Function name | Description |
