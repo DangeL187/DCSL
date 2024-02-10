@@ -3,6 +3,8 @@
 
 using namespace std;
 
+// The ClientWrapper is used to asynchronously receive new messages from the server
+
 class ClientWrapper {
 private:
     shared_ptr<Client> client;
