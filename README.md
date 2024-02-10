@@ -14,9 +14,9 @@ Use [Server.cpp](https://github.com/DangeL187/DCSL/blob/main/src/Server.cpp) and
 ## Prepare to build (Windows):
 CMakeLists file is for <b>mingw13</b> and <b>Boost 1.84.0</b> only.
 
-Pay attention to the location of the <b>"boost"</b> folder!
-In my case, it is located in "C:\boost"
-If you want it to be somewhere else, please change the paths in the cmake file.
+<p>Pay attention to the location of the <b>"boost"</b> folder!</p>
+<p>In my case, it is located in "C:\boost".</p>
+<p>If you want it to be somewhere else, please change the paths in the cmake file.</p>
 
 Note that if you are using Windows, the names in BOOST_LIBRARIES are
 unique for each version of your boost library!
