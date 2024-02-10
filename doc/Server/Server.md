@@ -1,5 +1,5 @@
-# [Server.h](https://github.com/DangeL187/DCSL/blob/main/include/Server/Server.h)
-## Main server header
+# [Server](https://github.com/DangeL187/DCSL/blob/main/include/Server/Server.h)
+## Main server class
 
 ### Public Member Functions
 | Return type | Function name | Description |
