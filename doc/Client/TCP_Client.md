@@ -1,5 +1,5 @@
-# [TCP_Client.h](https://github.com/DangeL187/DCSL/blob/main/include/Client/TCP_Client.h)
-## An auxiliary header file used to create convenient interaction with the <b>boost</b> library
+# [TCP_Client](https://github.com/DangeL187/DCSL/blob/main/include/Client/TCP_Client.h)
+## An auxiliary class used to create convenient interaction with the <b>boost</b> library
 ### Public Member Functions
 
 | Return type | Function name | Description |
