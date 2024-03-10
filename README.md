@@ -24,8 +24,11 @@ unique for each version of your boost library!
 sudo apt install libboost-all-dev
 ### How to build:
 mkdir build
+
 cd build
+
 cmake ..
+
 make
 #### How to run server:
 cd bin
