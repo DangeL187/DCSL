@@ -1,23 +1,19 @@
+#include <boost/shared_ptr.hpp>
+
+#pragma comment(lib, "ws2_32")
+
+class tcp_connection;
+
 class User {
-private:
-    tcp_connection::pointer socket;
-    std::string             name;
-    std::string             room_name;
 public:
-    User(std::string name_, tcp_connection::pointer socket_) {
-        name = name_;
-        socket = socket_;
-    }
-    void setRoom(std::string room_name_) {
-        room_name = room_name_;
-    }
-    std::string getName() {
-        return name;
-    }
-    std::string getRoom() {
-        return room_name;
-    }
-    tcp_connection::pointer& getSocket() {
-        return socket;
-    }
+    User(const std::string& name_, const boost::shared_ptr<tcp_connection>& socket_);
+    std::string getName();
+    std::string getRoom();
+    boost::shared_ptr<tcp_connection>& getSocket();
+    void setRoom(const std::string& room_name_);
+
+private:
+    std::string                         name;
+    std::string                         room_name;
+    boost::shared_ptr<tcp_connection>   socket;
 };
