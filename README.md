@@ -5,12 +5,10 @@ All the basic functionality is already included in this library.
 
 Anyway, feel free to change its code to suit your needs.
 ## Check out the [documentation](https://github.com/DangeL187/DCSL/blob/main/doc/DCSL.md) for additional information
-## Usage:
-Include <b>Server/Server.h</b> in your main server application.
 
-Include <b>Client/Client.h</b> in your main client application.
+## Example:
+[SyncWithMe](https://github.com/DangeL187/SyncWithMe) is written using DCSL
 
-Use [Server.cpp](https://github.com/DangeL187/DCSL/blob/main/src/Server.cpp) and [Client.cpp](https://github.com/DangeL187/DCSL/blob/main/src/Client.cpp) as an example.
 ## Prepare to build (Windows):
 CMakeLists file is for <b>mingw13</b> and <b>Boost 1.84.0</b> only.
 
